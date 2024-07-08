@@ -10,7 +10,17 @@ import {
     CommandSeparator,
     CommandShortcut,
 } from "@/components/ui/command"
-import {CreditCard, Folders, LayoutDashboard, Newspaper, Settings, User, Video, Videotape} from "lucide-react";
+import {
+    Clapperboard,
+    CreditCard,
+    Folders,
+    LayoutDashboard,
+    Newspaper,
+    Settings,
+    User,
+    Video,
+    Videotape
+} from "lucide-react";
 import Link from "next/link";
 
 
@@ -36,7 +46,7 @@ const Sidebar = () => {
                         <Link href="/admin/content-type">Content type</Link>
                     </CommandItem>
                     <CommandItem>
-                        <Videotape className="mr-2 h-4 w-4"/>
+                        <Clapperboard className="mr-2 h-4 w-4"/>
                         <Link href="/admin/genre">Genre</Link>
                     </CommandItem>
                 </CommandGroup>
