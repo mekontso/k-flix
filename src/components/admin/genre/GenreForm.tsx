@@ -13,8 +13,7 @@ import {useToast} from "@/components/ui/use-toast";
 import {useRouter} from "next/navigation";
 
 const formSchema = z.object({
-    id: z.any(),
-    name: z.string().min(1, {message: "Name is required"}),
+    id: z.any(), name: z.string().min(1, {message: "Name is required"}),
 })
 
 type formType = z.infer<typeof formSchema>
@@ -28,39 +27,37 @@ const GenreForm: React.FC<formProps> = ({genre}) => {
     // Initialize the form with react-hook-form and zodResolver
     const form = useForm<formType>({
         resolver: zodResolver(formSchema), defaultValues: {
-            id: null,
-            name: '',
+            id: null, name: '',
         },
     });
 
     useEffect(() => {
-        if(genre) {
+        if (genre) {
             form.reset({
-                id: genre.id,
-                name: genre.name
+                id: genre.id, name: genre.name
             })
         }
     }, [genre, form]);
     const handleFormSubmit = (data: formType) => {
         genre = {
-            id: data.id,
-            name: data.name
+            id: data.id, name: data.name
         }
-        createGenre(genre)
-            .then(response => {
-                toast({
-                    title: "Success",
-                    description: response.data.message,
+
+        if (genre.id == null) {
+            createGenre(genre)
+                .then(response => {
+                    toast({
+                        title: "Success", description: response.data.message,
+                    })
+                    router.push("/admin/genre")
                 })
-                router.push("/admin/genre")
-            })
-            .catch(error => {
-                toast({
-                    title: "Error",
-                    description: error.response.data.message,
-                    variant: "destructive"
+                .catch(error => {
+                    toast({
+                        title: "Error", description: error.response.data.message, variant: "destructive"
+                    })
                 })
-            })
+        }
+
     }
     return (<Card>
         <CardHeader>
@@ -71,9 +68,9 @@ const GenreForm: React.FC<formProps> = ({genre}) => {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-8">
                     <FormInputField control={form.control} label="Id" name="id" placeholder="Type name"
-                                    type="text" className="hidden" />
+                                    type="text" className="hidden"/>
                     <FormInputField control={form.control} label="Name" name="name" placeholder="Type name"
-                                    type="text" />
+                                    type="text"/>
                     <Button className='w-full' type="submit">Create</Button>
                 </form>
             </Form>
