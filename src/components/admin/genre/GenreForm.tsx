@@ -40,7 +40,7 @@ const GenreForm: React.FC<formProps> = ({genre}) => {
                 name: genre.name
             })
         }
-    }, []);
+    }, [genre, form]);
     const handleFormSubmit = (data: formType) => {
         genre = {
             id: data.id,
