@@ -7,6 +7,10 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/compo
 import {Form} from "@/components/ui/form";
 import FormInputField from "@/components/global/FormInputField";
 import {Button} from "@/components/ui/button";
+import {createGenre} from "@/services/api-service-genre";
+import {Genre} from "@/types";
+import {useToast} from "@/components/ui/use-toast";
+import {useRouter} from "next/navigation";
 
 const formSchema = z.object({
     name: z.string().min(1, {message: "Name is required"}),
@@ -15,6 +19,8 @@ const formSchema = z.object({
 type formType = z.infer<typeof formSchema>
 
 const GenreForm: React.FC = () => {
+    const {toast} = useToast();
+    const router = useRouter()
     // Initialize the form with react-hook-form and zodResolver
     const form = useForm<formType>({
         resolver: zodResolver(formSchema), defaultValues: {
@@ -22,7 +28,26 @@ const GenreForm: React.FC = () => {
         },
     });
     const handleFormSubmit = (data: formType) => {
-        console.log(data)
+        const genre : Genre = {
+            id: null,
+            name: data.name
+        }
+        createGenre(genre)
+            .then(response => {
+                toast({
+                    title: "Success",
+                    description: response.data.message,
+                })
+                router.push("/admin/genre")
+            })
+            .catch(error => {
+                console.log(error)
+                toast({
+                    title: "Error",
+                    description: error.response.data.message,
+                    variant: "destructive"
+                })
+            })
     }
     return (<Card>
         <CardHeader>
