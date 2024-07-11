@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useMemo } from "react";
 import {
     ColumnDef,
     flexRender,
@@ -16,6 +15,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import Spinner from "@/components/global/Spinner";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -29,30 +29,30 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
         getCoreRowModel: getCoreRowModel(),
     });
 
-    // memorise headers
-    const headerGroups = useMemo(() => table.getHeaderGroups(), [table]);
-    const rowModel = useMemo(() => table.getRowModel(), [table]);
-
     return (
         <div className="rounded-md border">
             <Table>
                 <TableHeader>
-                    {headerGroups.map((headerGroup) => (
+                    {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => (
-                                <TableHead key={header.id}>
-                                    {!header.isPlaceholder && flexRender(
-                                        header.column.columnDef.header,
-                                        header.getContext()
-                                    )}
-                                </TableHead>
-                            ))}
+                            {headerGroup.headers.map((header) => {
+                                return (
+                                    <TableHead key={header.id}>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
+                                    </TableHead>
+                                );
+                            })}
                         </TableRow>
                     ))}
                 </TableHeader>
                 <TableBody>
-                    {rowModel.rows?.length ? (
-                        rowModel.rows.map((row) => (
+                    {table.getRowModel().rows?.length ? (
+                        table.getRowModel().rows.map((row) => (
                             <TableRow
                                 key={row.id}
                                 data-state={row.getIsSelected() && "selected"}
@@ -67,6 +67,7 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
                     ) : (
                         <TableRow>
                             <TableCell colSpan={columns.length} className="h-24 text-center">
+                                <Spinner/>
                                 No results.
                             </TableCell>
                         </TableRow>
@@ -77,4 +78,4 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
     );
 };
 
-export default React.memo(DataTable); // prevent rerender if props not changed
+export default DataTable;
