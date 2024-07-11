@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, {useEffect} from 'react';
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -20,9 +20,9 @@ const formSchema = z.object({
 type formType = z.infer<typeof formSchema>
 
 type formProps = {
-    id?: number
+    genre?: Genre
 }
-const GenreForm: React.FC<formProps> = ({id}) => {
+const GenreForm: React.FC<formProps> = ({genre}) => {
     const {toast} = useToast();
     const router = useRouter()
     // Initialize the form with react-hook-form and zodResolver
@@ -32,18 +32,19 @@ const GenreForm: React.FC<formProps> = ({id}) => {
             name: '',
         },
     });
+
+    useEffect(() => {
+        if(genre) {
+            form.reset({
+                id: genre.id,
+                name: genre.name
+            })
+        }
+    }, []);
     const handleFormSubmit = (data: formType) => {
-        var genre: Genre;
-        if(id) {
-            genre  = {
-                id,
-                name: data.name
-            }
-        }else {
-           genre = {
-                id: data.id,
-                name: data.name
-            }
+        genre = {
+            id: data.id,
+            name: data.name
         }
         createGenre(genre)
             .then(response => {
