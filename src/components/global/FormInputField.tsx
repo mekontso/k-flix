@@ -4,22 +4,24 @@ import {FormControl, FormField, FormItem, FormLabel, FormMessage,} from "../ui/f
 import React from "react";
 
 type FormInputProps = {
-    control: Control<any>; name: string; label: string; type: string; placeholder: string;
+    control: Control<any>; name: string; label: string; type: string; placeholder: string, className?: string;
 };
 
 
-const FormInputField: React.FC<FormInputProps> = ({control, name, label, type, placeholder}) => {
-    return (<FormField
+const FormInputField: React.FC<FormInputProps> = ({control, name, label, type, placeholder, className = ""}) => {
+    return (<div className={className}>
+        <FormField
             control={control}
             name={name}
             render={({field}) => (<FormItem>
-                    <FormLabel>{label}</FormLabel>
-                    <FormControl>
-                        <Input type={type} placeholder={placeholder} {...field} />
-                    </FormControl>
-                    <FormMessage/>
-                </FormItem>)}
-        />);
+                <FormLabel>{label}</FormLabel>
+                <FormControl>
+                    <Input type={type} placeholder={placeholder} {...field} />
+                </FormControl>
+                <FormMessage/>
+            </FormItem>)}
+        />
+    </div>);
 };
 
 export default FormInputField;

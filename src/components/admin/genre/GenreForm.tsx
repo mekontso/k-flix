@@ -13,24 +13,37 @@ import {useToast} from "@/components/ui/use-toast";
 import {useRouter} from "next/navigation";
 
 const formSchema = z.object({
+    id: z.any(),
     name: z.string().min(1, {message: "Name is required"}),
 })
 
 type formType = z.infer<typeof formSchema>
 
-const GenreForm: React.FC = () => {
+type formProps = {
+    id?: number
+}
+const GenreForm: React.FC<formProps> = ({id}) => {
     const {toast} = useToast();
     const router = useRouter()
     // Initialize the form with react-hook-form and zodResolver
     const form = useForm<formType>({
         resolver: zodResolver(formSchema), defaultValues: {
+            id: null,
             name: '',
         },
     });
     const handleFormSubmit = (data: formType) => {
-        const genre : Genre = {
-            id: null,
-            name: data.name
+        var genre: Genre;
+        if(id) {
+            genre  = {
+                id,
+                name: data.name
+            }
+        }else {
+           genre = {
+                id: data.id,
+                name: data.name
+            }
         }
         createGenre(genre)
             .then(response => {
@@ -41,7 +54,6 @@ const GenreForm: React.FC = () => {
                 router.push("/admin/genre")
             })
             .catch(error => {
-                console.log(error)
                 toast({
                     title: "Error",
                     description: error.response.data.message,
@@ -57,8 +69,10 @@ const GenreForm: React.FC = () => {
         <CardContent className='space-y-2'>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-8">
+                    <FormInputField control={form.control} label="Id" name="id" placeholder="Type name"
+                                    type="text" className="hidden" />
                     <FormInputField control={form.control} label="Name" name="name" placeholder="Type name"
-                                    type="text"/>
+                                    type="text" />
                     <Button className='w-full' type="submit">Create</Button>
                 </form>
             </Form>
