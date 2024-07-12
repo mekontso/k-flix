@@ -1,5 +1,5 @@
 "use client"
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -7,7 +7,7 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/compo
 import {Form} from "@/components/ui/form";
 import FormInputField from "@/components/global/FormInputField";
 import {Button} from "@/components/ui/button";
-import {createGenre} from "@/services/api-service-genre";
+import {createGenre, updateGenre} from "@/services/api-service-genre";
 import {Genre} from "@/types";
 import {useToast} from "@/components/ui/use-toast";
 import {useRouter} from "next/navigation";
@@ -22,12 +22,13 @@ type formProps = {
     genre?: Genre
 }
 const GenreForm: React.FC<formProps> = ({genre}) => {
+    const [buttonText, setButtonText] = useState<string>("Create");
     const {toast} = useToast();
     const router = useRouter()
     // Initialize the form with react-hook-form and zodResolver
     const form = useForm<formType>({
         resolver: zodResolver(formSchema), defaultValues: {
-            id: null, name: '',
+            id: undefined, name: '',
         },
     });
 
@@ -36,6 +37,7 @@ const GenreForm: React.FC<formProps> = ({genre}) => {
             form.reset({
                 id: genre.id, name: genre.name
             })
+            setButtonText("Update")
         }
     }, [genre, form]);
     const handleFormSubmit = (data: formType) => {
@@ -45,6 +47,19 @@ const GenreForm: React.FC<formProps> = ({genre}) => {
 
         if (genre.id == null) {
             createGenre(genre)
+                .then(response => {
+                    toast({
+                        title: "Success", description: response.data.message,
+                    })
+                    router.push("/admin/genre")
+                })
+                .catch(error => {
+                    toast({
+                        title: "Error", description: error.response.data.message, variant: "destructive"
+                    })
+                })
+        } else {
+            updateGenre(genre)
                 .then(response => {
                     toast({
                         title: "Success", description: response.data.message,
@@ -71,7 +86,7 @@ const GenreForm: React.FC<formProps> = ({genre}) => {
                                     type="text" className="hidden"/>
                     <FormInputField control={form.control} label="Name" name="name" placeholder="Type name"
                                     type="text"/>
-                    <Button className='w-full' type="submit">Create</Button>
+                    <Button className='w-full' type="submit">{buttonText}</Button>
                 </form>
             </Form>
         </CardContent>

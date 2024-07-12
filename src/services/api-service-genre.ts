@@ -8,3 +8,7 @@ export const getAllGenre = async (pageNumber: number = 0, pageSize: number = 10,
 })
 
 export const createGenre = async (genre: Genre): Promise<any> => await apiClient.post("/genre/create", genre)
+
+export const getGenre = async (id: string): Promise<any> => await apiClient.get(`/genre/get/${id}`,)
+
+export const updateGenre = async (genre: Genre): Promise<any> => await apiClient.put(`/genre/update/${genre.id}`, genre)
