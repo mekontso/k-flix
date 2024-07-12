@@ -5,7 +5,7 @@ import Link from "next/link";
 import {Plus} from "lucide-react";
 import BreadcrumbCustom from "@/components/global/BreadcrumbCustom";
 import {Genre} from "@/types";
-import {getAllGenre} from "@/services/api-service-genre";
+import {apiCallGetAllGenre} from "@/services/api-service-genre";
 import DataTable from "@/components/global/DataTable";
 import dataTableColumnsGenre from "@/components/admin/genre/DataTableColumns";
 import {useRouter}   from "next/navigation";
@@ -19,7 +19,7 @@ const Page: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            await getAllGenre()
+            await apiCallGetAllGenre()
                 .then(response => {
                     setGenreList(response.data.data.content);
                 })

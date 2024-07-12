@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from "react";
 import GenreForm from "@/components/admin/genre/GenreForm";
 import BreadcrumbCustom from "@/components/global/BreadcrumbCustom";
-import {getGenre} from "@/services/api-service-genre";
+import {apiCallGetGenre} from "@/services/api-service-genre";
 import {Genre} from "@/types";
 import {toast} from "@/components/ui/use-toast";
 import Spinner from "@/components/global/Spinner";
@@ -18,7 +18,7 @@ const Page = ({params}: { params: { id: string } }) => {
         const fetchData = async () => {
             if (id != null) {
                 console.log("Send request to server with id = " + id);
-                await getGenre(id)
+                await apiCallGetGenre(id)
                     .then(response => {
                         setGenre(response.data.data);
                     })
