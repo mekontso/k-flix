@@ -6,8 +6,6 @@ import {getGenre} from "@/services/api-service-genre";
 import {Genre} from "@/types";
 import {toast} from "@/components/ui/use-toast";
 import Spinner from "@/components/global/Spinner";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 
 const Page = ({params}: { params: { id: string } }) => {
     const [genre, setGenre] = useState<Genre | undefined>(undefined);
@@ -26,7 +24,7 @@ const Page = ({params}: { params: { id: string } }) => {
                     })
                     .catch(error => {
                         toast({
-                            title: "Error", description: error.response.data.message,variant: "destructive"
+                            title: "Error", description: error.response.data.message, variant: "destructive"
                         });
                     });
             }
@@ -37,13 +35,13 @@ const Page = ({params}: { params: { id: string } }) => {
     }, [id]);
 
     return (<>
-            <div className="mb-8">
-                <BreadcrumbCustom links={breadcrumbLinks} currentPageName={currentPageName}/>
-            </div>
-            <div className="flex items-center justify-center h-full">
-                {loading ? (<Spinner/>) : (<GenreForm genre={genre}/>)}
-            </div>
-        </>);
+        <div className="mb-8">
+            <BreadcrumbCustom links={breadcrumbLinks} currentPageName={currentPageName}/>
+        </div>
+        <div className="flex items-center justify-center h-full">
+            {loading ? (<Spinner/>) : (<GenreForm genre={genre}/>)}
+        </div>
+    </>);
 }
 
 export default Page;

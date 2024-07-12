@@ -8,9 +8,10 @@ import {Genre} from "@/types";
 import {getAllGenre} from "@/services/api-service-genre";
 import DataTable from "@/components/global/DataTable";
 import dataTableColumnsGenre from "@/components/admin/genre/DataTableColumns";
-
+import {useRouter}   from "next/navigation";
 
 const Page: React.FC = () => {
+    const router = useRouter();
     const [genreList, setGenreList] = React.useState<Genre[]>([]);
     const breadcrumbLinks = [{ href: "/admin", label: "Dashboard" }];
     const currentPageName = "Genre";
@@ -40,7 +41,7 @@ const Page: React.FC = () => {
             </Button>
         </div>
         <div className="py-8">
-            <DataTable columns={dataTableColumnsGenre} data={genreList} />
+            <DataTable columns={dataTableColumnsGenre(router)} data={genreList} />
         </div>
     </div>)
 }
