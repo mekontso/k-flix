@@ -7,7 +7,7 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/compo
 import {Form} from "@/components/ui/form";
 import FormInputField from "@/components/global/FormInputField";
 import {Button} from "@/components/ui/button";
-import {createGenre, updateGenre} from "@/services/api-service-genre";
+import {apiCallCreateGenre, apiCallUpdateGenre} from "@/services/api-service-genre";
 import {Genre} from "@/types";
 import {useToast} from "@/components/ui/use-toast";
 import {useRouter} from "next/navigation";
@@ -46,7 +46,7 @@ const GenreForm: React.FC<formProps> = ({genre}) => {
         }
 
         if (genre.id == null) {
-            createGenre(genre)
+            apiCallCreateGenre(genre)
                 .then(response => {
                     toast({
                         title: "Success", description: response.data.message,
@@ -59,7 +59,7 @@ const GenreForm: React.FC<formProps> = ({genre}) => {
                     })
                 })
         } else {
-            updateGenre(genre)
+            apiCallUpdateGenre(genre)
                 .then(response => {
                     toast({
                         title: "Success", description: response.data.message,
